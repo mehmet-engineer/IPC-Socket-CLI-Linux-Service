@@ -6,11 +6,16 @@ This project is simple calculator and provides Linux CLI functionality. CLI proc
 
 *Date: 11.12.2023*
 
-Architecture:
+
+Project Architecture:
+---
 
 ![](architecture.svg)
 
-Build and installation:
+Installation:
+---
+
+Build:
 ```
 mkdir build
 cd build
@@ -27,11 +32,41 @@ sudo systemctl status calculatord
 sudo journalctl --unit calculatord --follow
 ```
 
-Client Execution with CLI:
+CLI Client Execution Examples:
+---
+
+Adding:
 ```
-calculator_client add 2 3
+calculator_client add 6 2
 ```
 > Client connected to server. 
 >
-> Client: Sending query: 1 2 3  
-> Client: Received response: 5
+> Client: Sending query: 1 6 2  
+> Client: Received response: 8
+
+Subtracting:
+```
+calculator_client subtract 6 2
+```
+> Client connected to server. 
+>
+> Client: Sending query: 2 6 2  
+> Client: Received response: 4
+
+Multiplying:
+```
+calculator_client multiply 6 2
+```
+> Client connected to server. 
+>
+> Client: Sending query: 3 6 2  
+> Client: Received response: 12
+
+Dividing:
+```
+calculator_client divide 6 2
+```
+> Client connected to server. 
+>
+> Client: Sending query: 4 6 2  
+> Client: Received response: 3
