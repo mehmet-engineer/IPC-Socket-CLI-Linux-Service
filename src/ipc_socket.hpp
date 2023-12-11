@@ -8,6 +8,7 @@
 #include <vector>
 #include <cstring>
 #include <string>
+#include <sys/stat.h>
 
 /**
  * @author: Mehmet Kahraman

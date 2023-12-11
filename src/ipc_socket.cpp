@@ -45,8 +45,6 @@ void Socket::open_server_socket()
         close_server_socket();
         std::exit(-1);
     }
-
-    unlink(socket_path);
 }
 
 void Socket::open_client_socket() 
@@ -80,6 +78,14 @@ void Socket::bind_server_to_socket()
 
     std::cout << "Server socket opened with " << addr.sun_family << " domain." << std::endl;
     std::cout << "Server socket opened with " << addr.sun_path << " path." << std::endl;
+
+    int permission = chmod(socket_path, S_IRWXU | S_IRWXG | S_IRWXO);
+    if (permission == -1) {
+        std::cerr << "Socket file path could not give chmod permission to client." << std::endl;
+        close_server_socket();
+        std::exit(-1);
+    }
+
 }
 
 void Socket::listen_client()
