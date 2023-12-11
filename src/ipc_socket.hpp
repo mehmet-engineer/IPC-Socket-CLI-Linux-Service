@@ -7,6 +7,7 @@
 #include <thread>
 #include <vector>
 #include <cstring>
+#include <string>
 
 /**
  * @author: Mehmet Kahraman
@@ -34,6 +35,8 @@ class Socket {
         int number1;
         int number2;
         int result;
+        ssize_t query_bytesRead;
+        ssize_t resp_bytesRead;
 
         // client definitions
         int socket_client;
@@ -44,10 +47,7 @@ class Socket {
         // query response definitions
         int client_fd;
         int query_buffer_size;
-        std::vector<int> query_vector;
         int resp_buffer_size;
-        std::vector<int> resp_vector;
-        ssize_t query_bytesRead;
 
         // Constructor
         Socket();
@@ -62,12 +62,12 @@ class Socket {
         void bind_server_to_socket();
         void listen_client();
         void wait_and_accept();
-        void get_query();
-        void send_response();
+        std::vector<int> get_query();
+        void send_response(std::vector<int> &resp_vector);
 
         // client member functions
         void connect_to_server();
-        void send_query();
-        void get_response();
+        void send_query(std::vector<int> &query_vector);
+        std::vector<int> get_response();
 
 };

@@ -2,7 +2,7 @@
 
 /**
  * @author: Mehmet Kahraman
- * @date: 08.12.2023
+ * @date: 11.12.2023
  * @about: Inter process communication with UNIX domain sockets
  */
 
@@ -108,9 +108,8 @@ void Socket::wait_and_accept()
     std::cout << "Server accepted client connection." << std::endl;
 }
 
-void Socket::get_query()
+std::vector<int> Socket::get_query()
 {      
-    query_vector.clear();
     char buffer[query_buffer_size];
     query_bytesRead = read(client_fd, buffer, sizeof(buffer));
 
@@ -120,13 +119,16 @@ void Socket::get_query()
         std::exit(-1);
     }
 
+    std::vector<int> query_vec(query_buffer_size);
     for (int i=0; i<query_buffer_size; i++) {
-        query_vector.push_back(buffer[i]);
-        std::cout << "Server: Received query[" << i << "]: " << buffer[i] << std::endl;
+        query_vec[i] = buffer[i];
+        std::cout << "Server: Received query[" << i << "]: " << static_cast<int>(buffer[i]) << std::endl;
     }
+
+    return query_vec;
 }
 
-void Socket::send_response()
+void Socket::send_response(std::vector<int> &resp_vector)
 {   
     char resp_buffer[resp_vector.size()];
     for (int i=0; i<resp_vector.size(); i++) {
@@ -141,7 +143,7 @@ void Socket::send_response()
     }
 
     for (int i=0; i<resp_vector.size(); i++) {
-        std::cout << "Server: Sent response[" << i << "]: " << resp_buffer[i] << std::endl;
+        std::cout << "Server: Sent response[" << i << "]: " << static_cast<int>(resp_buffer[i]) << std::endl;
     }
 }
 
@@ -156,12 +158,38 @@ void Socket::connect_to_server()
     std::cout << "Client connected to server. \n" << std::endl;
 }
 
-void Socket::send_query()
-{
-    
+void Socket::send_query(std::vector<int> &query_vector)
+{   
+    char query_buffer[query_vector.size()];
+    for (int i=0; i<query_vector.size(); i++) {
+        query_buffer[i] = query_vector[i];
+    }
+    auto write_result = write(socket_client, query_buffer, sizeof(query_buffer));
+
+    if (write_result == -1) {
+        std::cerr << "Client: Could not write queryto socket." << std::endl;
+        close_client_socket();
+        std::exit(-1);
+    }
 }
 
-void Socket::get_response()
+std::vector<int> Socket::get_response()
 {
-    
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    char result_buffer[resp_buffer_size];
+
+    resp_bytesRead = read(socket_client, &result_buffer, sizeof(result_buffer));
+
+    if (resp_bytesRead == -1) {
+        std::cerr << "Client: Could not read response from server." << std::endl;
+        close_client_socket();
+        std::exit(-1);
+    }
+
+    std::vector<int> result_vec(resp_buffer_size);
+    for (int i=0; i<resp_buffer_size; i++) {
+        result_vec[i] = result_buffer[i];
+    }
+
+    return result_vec;
 }

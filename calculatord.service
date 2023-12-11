@@ -1,0 +1,13 @@
+[Unit]
+Description=Calculator Service
+Documentation=https://github.com/mehmet-engineer/IPC-Socket-CLI-Linux-Service
+DefaultDependencies=no
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/calculator_server
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=default.target

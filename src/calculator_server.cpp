@@ -20,38 +20,42 @@ int main()
     server.query_buffer_size = 3;
     server.resp_buffer_size = 1;
 
+    std::vector<int> query_vector(server.query_buffer_size);
+    std::vector<int> resp_vector(server.resp_buffer_size);
+
     int calc_result = 0;
 
     while (true)
     {
         server.wait_and_accept();
-        server.get_query();
+        std::cout << std::endl;
+        
+        query_vector = server.get_query();
 
-        if (server.query_vector[0] == 1)
+        if (query_vector[0] == 1)
         {
-            calc_result = server.query_vector[1] + server.query_vector[2];
+            calc_result = query_vector[1] + query_vector[2];
         }
-        else if (server.query_vector[0] == 2) 
+        else if (query_vector[0] == 2) 
         {
-            calc_result = server.query_vector[1] - server.query_vector[2];
+            calc_result = query_vector[1] - query_vector[2];
         }
-        else if (server.query_vector[0] == 3) 
+        else if (query_vector[0] == 3) 
         {
-            calc_result = server.query_vector[1] * server.query_vector[2];
+            calc_result = query_vector[1] * query_vector[2];
         }
-        else if (server.query_vector[0] == 4)
+        else if (query_vector[0] == 4)
         {
-            calc_result = server.query_vector[1] / server.query_vector[2];
+            calc_result = query_vector[1] / query_vector[2];
         }
         else {
             std::cerr << "Server: Invalid operation from client." << std::endl;
-            server.close_server_socket();
-            return -1;
+            //server.close_server_socket();
+            //return -1;
         }
 
-        server.resp_vector.clear();
-        server.resp_vector.push_back(calc_result);
-        server.send_response();
+        resp_vector[0] = calc_result;
+        server.send_response(resp_vector);
         
         std::cout << std::endl;
         close(server.client_fd);
