@@ -70,3 +70,23 @@ calculator_client divide 6 2
 >
 > Client: Sending query: 4 6 2  
 > Client: Received response: 3
+
+Bonus! Python Socket Example:
+---
+
+Server:
+```
+python3 server.py
+```
+> Server program started  
+> Server started to listening...
+> 
+> Server: client accepted.  
+> Server: received query:  Hello world! from client.
+
+Client:
+```
+python3 client.py
+```
+> Client: connected to server.  
+> Client: received response: Hello world! from server.
